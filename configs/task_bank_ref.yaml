@@ -1,0 +1,13 @@
+# Task bank for reference worlds (4 days from 2024-01-01; day 1 is DSL warmup).
+task_bank:
+  max_seeds: 16
+  sort_metric: seed_score
+  bar_minutes: 5
+  scenario: "cross-sectional 30-minute return ranking on a synthetic universe"
+  time_splits:
+    - name: split_1
+      start_date: "2024-01-02"
+      end_date: "2024-01-03"
+    - name: split_2
+      start_date: "2024-01-03"
+      end_date: "2024-01-04"

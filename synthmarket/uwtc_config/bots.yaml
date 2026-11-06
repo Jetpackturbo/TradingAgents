@@ -1,0 +1,3 @@
+# Intentionally empty: synthmarket worlds supply their whole roster via extra_bots.
+# (UWTC's default roster contains MarketMakers that quote around the exogenous fair path.)
+bots: []

@@ -1,0 +1,54 @@
+# Endogenous-price UWTC world WITH informed flow: TargetTraders see F_t (lagged, noisy)
+# and trade the book towards it, so price tracks F with a lag.
+name: uwtc_informed
+seed: 1
+n_symbols: 16
+symbol_prefix: S
+price_min: 20.0
+price_max: 200.0
+days: 5
+bars_per_day: 1440        # one UWTC day = one calendar day of 1-minute bars
+bar_ms: 1000              # sim-ms per output minute bar
+tick_ms: 100
+calendar_start: "2024-01-01 00:00"
+
+schedule:
+  family: random_walk
+  sigma_f: 0.001          # per-minute vol of log F
+  mu: 0.0
+  mu_std: 0.00002         # per-symbol drift dispersion (per minute)
+  sigma_dispersion: 0.3   # per-symbol vol multiplier exp(0.3 z)
+
+market_makers:
+  - name: fmm-tight
+    count: 2
+    params: {interval_ms: 200, ewma_alpha: 0.0, kyle_bps_per_unit: 0.3, kyle_max_bps: 30,
+             half_spread_bps: 4, levels: 2, level_spacing_bps: 4, size: 15,
+             skew_bps_per_unit: 0.02, max_skew_bps: 50}
+  - name: fmm-deep
+    count: 1
+    params: {interval_ms: 500, ewma_alpha: 0.0, kyle_bps_per_unit: 0.3, kyle_max_bps: 30,
+             half_spread_bps: 10, levels: 3, level_spacing_bps: 8, size: 40,
+             skew_bps_per_unit: 0.01, max_skew_bps: 50}
+
+noise:
+  count: 4
+  interval_ms: 100
+  orders_per_bar: 0.4
+  size_min: 1
+  size_max: 20
+  slippage_bps: 10
+
+informed:
+  count: 3
+  interval_ms: 100
+  arrivals_per_bar: 0.3
+  size_min: 10
+  size_max: 30
+  edge_bps: 5
+  lag_steps: 2
+  target_noise_bps: 5
+  side: both
+
+retail:
+  count: 0

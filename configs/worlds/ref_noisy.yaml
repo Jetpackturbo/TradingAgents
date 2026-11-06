@@ -1,0 +1,8 @@
+# Slow discovery buried in microstructure noise (sigma_n = 3 sigma_f): harder, momentum turns to reversal.
+name: ref_noisy
+n_symbols: 16
+minutes: 5760
+k: 0.02
+mu: 0.0
+sigma_f: 0.0010
+sigma_n: 0.0030

@@ -218,3 +218,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Generated outputs (regenerate with scripts/); keep the sanity report
+runs/*
+!runs/sanity/
+data/

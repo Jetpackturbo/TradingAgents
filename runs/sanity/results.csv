@@ -1,0 +1,92 @@
+world,check,expected,measured,pass
+ref_slow,oracle gold = analytic E[RankIC],+0.6512,+0.6542 +/- 0.0014 (z=+2.17),True
+ref_slow,"momentum div(last(close(13)), first(close(13))) gold = analytic",+0.2500,+0.2520 +/- 0.0031 (z=+0.62),True
+ref_slow,oracle mispricing_corr = 1,1.0000,1.000000,True
+ref_slow,neg_oracle = -oracle (gold and proxy),-0.654188 / -0.645621,-0.654188 / -0.645621,True
+ref_slow,neg(momentum) = -momentum (DSL path),-0.251984,-0.251984,True
+ref_slow,random factor gold = 0,0 within 3 se,+0.0006 +/- 0.0011 (z=+0.51),True
+ref_slow,constant factor rejected,valid=False,valid=False,True
+ref_slow,invalid DSL op rejected,None,None,True
+ref_slow,block-bootstrap se calibrated to within-seed time sampling (oracle),"ratio in [0.67, 1.5]",mean boot se 0.0112 vs half-split sd 0.0134 (ratio 0.84); seed-to-seed sd 0.0109 (ratio 1.03),True
+ref_slow,block-bootstrap se calibrated to within-seed time sampling (momentum),"ratio in [0.67, 1.5]",mean boot se 0.0197 vs half-split sd 0.0235 (ratio 0.84); seed-to-seed sd 0.0250 (ratio 0.79),True
+ref_slow,block-bootstrap se calibrated to within-seed time sampling (random),"ratio in [0.67, 1.5]",mean boot se 0.0087 vs half-split sd 0.0094 (ratio 0.93); seed-to-seed sd 0.0088 (ratio 0.99),True
+ref_slow,proxy sign = gold sign (factors with significant gold),4/4,4/4,True
+ref_slow,proxy vs gold rank agreement (Spearman over factor set),> 0.8,1.000,True
+ref_slow,mean |proxy - gold| (single train split vs held-out seeds),report only,0.0158,True
+ref_fast,oracle gold = analytic E[RankIC],+0.3247,+0.3261 +/- 0.0010 (z=+1.38),True
+ref_fast,"momentum div(last(close(13)), first(close(13))) gold = analytic",+0.0350,+0.0379 +/- 0.0025 (z=+1.17),True
+ref_fast,oracle mispricing_corr = 1,1.0000,1.000000,True
+ref_fast,neg_oracle = -oracle (gold and proxy),-0.326096 / -0.327196,-0.326096 / -0.327196,True
+ref_fast,neg(momentum) = -momentum (DSL path),-0.037925,-0.037925,True
+ref_fast,random factor gold = 0,0 within 3 se,+0.0020 +/- 0.0010 (z=+2.03),True
+ref_fast,constant factor rejected,valid=False,valid=False,True
+ref_fast,invalid DSL op rejected,None,None,True
+ref_fast,block-bootstrap se calibrated to within-seed time sampling (oracle),"ratio in [0.67, 1.5]",mean boot se 0.0083 vs half-split sd 0.0082 (ratio 1.01); seed-to-seed sd 0.0083 (ratio 0.99),True
+ref_fast,block-bootstrap se calibrated to within-seed time sampling (momentum),"ratio in [0.67, 1.5]",mean boot se 0.0181 vs half-split sd 0.0206 (ratio 0.88); seed-to-seed sd 0.0200 (ratio 0.91),True
+ref_fast,block-bootstrap se calibrated to within-seed time sampling (random),"ratio in [0.67, 1.5]",mean boot se 0.0086 vs half-split sd 0.0083 (ratio 1.04); seed-to-seed sd 0.0079 (ratio 1.09),True
+ref_fast,proxy sign = gold sign (factors with significant gold),4/4,4/4,True
+ref_fast,proxy vs gold rank agreement (Spearman over factor set),> 0.8,1.000,True
+ref_fast,mean |proxy - gold| (single train split vs held-out seeds),report only,0.0016,True
+ref_noisy,oracle gold = analytic E[RankIC],+0.4502,+0.4512 +/- 0.0012 (z=+0.83),True
+ref_noisy,"momentum div(last(close(13)), first(close(13))) gold = analytic",-0.2147,-0.2133 +/- 0.0018 (z=+0.77),True
+ref_noisy,oracle mispricing_corr = 1,1.0000,1.000000,True
+ref_noisy,neg_oracle = -oracle (gold and proxy),-0.451202 / -0.456553,-0.451202 / -0.456553,True
+ref_noisy,neg(momentum) = -momentum (DSL path),+0.213302,+0.213302,True
+ref_noisy,random factor gold = 0,0 within 3 se,+0.0015 +/- 0.0011 (z=+1.31),True
+ref_noisy,constant factor rejected,valid=False,valid=False,True
+ref_noisy,invalid DSL op rejected,None,None,True
+ref_noisy,block-bootstrap se calibrated to within-seed time sampling (oracle),"ratio in [0.67, 1.5]",mean boot se 0.0112 vs half-split sd 0.0088 (ratio 1.27); seed-to-seed sd 0.0093 (ratio 1.20),True
+ref_noisy,block-bootstrap se calibrated to within-seed time sampling (momentum),"ratio in [0.67, 1.5]",mean boot se 0.0141 vs half-split sd 0.0135 (ratio 1.05); seed-to-seed sd 0.0142 (ratio 0.99),True
+ref_noisy,block-bootstrap se calibrated to within-seed time sampling (random),"ratio in [0.67, 1.5]",mean boot se 0.0087 vs half-split sd 0.0092 (ratio 0.94); seed-to-seed sd 0.0089 (ratio 0.98),True
+ref_noisy,proxy sign = gold sign (factors with significant gold),4/4,4/4,True
+ref_noisy,proxy vs gold rank agreement (Spearman over factor set),> 0.8,1.000,True
+ref_noisy,mean |proxy - gold| (single train split vs held-out seeds),report only,0.0136,True
+ref_placebo,oracle gold = analytic E[RankIC],+0.0000,+0.0034 +/- 0.0024 (z=+1.44),True
+ref_placebo,"momentum div(last(close(13)), first(close(13))) gold = analytic",+0.0000,+0.0003 +/- 0.0023 (z=+0.12),True
+ref_placebo,oracle mispricing_corr = 1,1.0000,1.000000,True
+ref_placebo,neg_oracle = -oracle (gold and proxy),-0.003388 / +0.003938,-0.003388 / +0.003938,True
+ref_placebo,neg(momentum) = -momentum (DSL path),-0.000283,-0.000283,True
+ref_placebo,random factor gold = 0,0 within 3 se,+0.0004 +/- 0.0009 (z=+0.43),True
+ref_placebo,constant factor rejected,valid=False,valid=False,True
+ref_placebo,invalid DSL op rejected,None,None,True
+ref_placebo,block-bootstrap se calibrated to within-seed time sampling (oracle),"ratio in [0.67, 1.5]",mean boot se 0.0198 vs half-split sd 0.0198 (ratio 1.00); seed-to-seed sd 0.0188 (ratio 1.05),True
+ref_placebo,block-bootstrap se calibrated to within-seed time sampling (momentum),"ratio in [0.67, 1.5]",mean boot se 0.0178 vs half-split sd 0.0169 (ratio 1.06); seed-to-seed sd 0.0182 (ratio 0.98),True
+ref_placebo,block-bootstrap se calibrated to within-seed time sampling (random),"ratio in [0.67, 1.5]",mean boot se 0.0086 vs half-split sd 0.0083 (ratio 1.04); seed-to-seed sd 0.0071 (ratio 1.22),True
+ref_placebo,proxy sign = gold sign (factors with significant gold),0/0,0/0,True
+ref_placebo,"no truth-derived factor (oracle, neg_oracle) has significant gold (placebo)",0 significant,0 significant,True
+ref_placebo,"price-only factors with significant gold (placebo; microstructure, not F)",report only,none,True
+ref_placebo,mean |proxy - gold| (single train split vs held-out seeds),report only,0.0102,True
+uwtc_informed,oracle gold > 0 (informed) / = 0 (placebo),> 0,+0.4288 +/- 0.0015,True
+uwtc_informed,"momentum div(last(close(13)), first(close(13))) gold (no closed form)",report only,+0.0652 +/- 0.0024,True
+uwtc_informed,oracle mispricing_corr = 1,1.0000,1.000000,True
+uwtc_informed,neg_oracle = -oracle (gold and proxy),-0.428771 / -0.434608,-0.428771 / -0.434608,True
+uwtc_informed,neg(momentum) = -momentum (DSL path),-0.065200,-0.065200,True
+uwtc_informed,random factor gold = 0,0 within 3 se,+0.0008 +/- 0.0011 (z=+0.71),True
+uwtc_informed,constant factor rejected,valid=False,valid=False,True
+uwtc_informed,invalid DSL op rejected,None,None,True
+uwtc_informed,block-bootstrap se calibrated to within-seed time sampling (oracle),"ratio in [0.67, 1.5]",mean boot se 0.0077 vs half-split sd 0.0078 (ratio 0.98); seed-to-seed sd 0.0118 (ratio 0.65),True
+uwtc_informed,block-bootstrap se calibrated to within-seed time sampling (momentum),"ratio in [0.67, 1.5]",mean boot se 0.0166 vs half-split sd 0.0189 (ratio 0.88); seed-to-seed sd 0.0194 (ratio 0.85),True
+uwtc_informed,block-bootstrap se calibrated to within-seed time sampling (random),"ratio in [0.67, 1.5]",mean boot se 0.0075 vs half-split sd 0.0083 (ratio 0.90); seed-to-seed sd 0.0085 (ratio 0.87),True
+uwtc_informed,proxy sign = gold sign (factors with significant gold),4/4,4/4,True
+uwtc_informed,proxy vs gold rank agreement (Spearman over factor set),> 0.8,1.000,True
+uwtc_informed,mean |proxy - gold| (single train split vs held-out seeds),report only,0.0156,True
+uwtc_placebo,oracle gold > 0 (informed) / = 0 (placebo),0 within 3 se,-0.0030 +/- 0.0022,True
+uwtc_placebo,"momentum div(last(close(13)), first(close(13))) gold (no closed form)",report only,-0.0105 +/- 0.0019,True
+uwtc_placebo,oracle mispricing_corr = 1,1.0000,1.000000,True
+uwtc_placebo,neg_oracle = -oracle (gold and proxy),+0.002990 / -0.002558,+0.002990 / -0.002558,True
+uwtc_placebo,neg(momentum) = -momentum (DSL path),+0.010500,+0.010500,True
+uwtc_placebo,random factor gold = 0,0 within 3 se,+0.0008 +/- 0.0010 (z=+0.82),True
+uwtc_placebo,constant factor rejected,valid=False,valid=False,True
+uwtc_placebo,invalid DSL op rejected,None,None,True
+uwtc_placebo,block-bootstrap se calibrated to within-seed time sampling (oracle),"ratio in [0.67, 1.5]",mean boot se 0.0169 vs half-split sd 0.0185 (ratio 0.91); seed-to-seed sd 0.0178 (ratio 0.95),True
+uwtc_placebo,block-bootstrap se calibrated to within-seed time sampling (momentum),"ratio in [0.67, 1.5]",mean boot se 0.0151 vs half-split sd 0.0163 (ratio 0.93); seed-to-seed sd 0.0150 (ratio 1.01),True
+uwtc_placebo,block-bootstrap se calibrated to within-seed time sampling (random),"ratio in [0.67, 1.5]",mean boot se 0.0076 vs half-split sd 0.0081 (ratio 0.93); seed-to-seed sd 0.0079 (ratio 0.96),True
+uwtc_placebo,proxy sign = gold sign (factors with significant gold),2/2,2/2,True
+uwtc_placebo,"no truth-derived factor (oracle, neg_oracle) has significant gold (placebo)",0 significant,0 significant,True
+uwtc_placebo,"price-only factors with significant gold (placebo; microstructure, not F)",report only,"dsl:div(last(close(13)), first(close(13))) -0.0105; dsl:neg(div(last(close(13)), first(close(13)))) +0.0105",True
+uwtc_placebo,mean |proxy - gold| (single train split vs held-out seeds),report only,0.0113,True
+e2e,reward placed only on last response token,True,True,True
+e2e,reward = evaluator proxy for the row's task window,+0.233746 (window 2024-01-03..2024-01-04),+0.233746,True
+e2e,invalid / missing expr -> -1,"-1.0, -1.0","-1.0, -1.0",True
+e2e,reward_extra_info logs gold/proxy_se per row,lists of len 3,"gold=[0.2471, nan, nan], proxy_se=[0.0281, 0.0, 0.0]",True
+e2e,prompt rows carry task windows,start/end in extra_info,"[('2024-01-03', '2024-01-04')]",True

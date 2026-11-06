@@ -1,0 +1,56 @@
+# Base UWTC market config for synthmarket worlds (used via load_round_config(config_dir=...)).
+# Per-world values (days, day_ms, tick_ms, instruments, model, bots) are supplied as overrides
+# by synthmarket.world.WorldConfig.round_config(). Money values are integer cents.
+
+days: 3
+day_ms: 1440000
+pre_open_ms: 0
+tick_ms: 100
+
+market:
+  tick_cents: 1
+  lot_size: 1
+  starting_cash_cents: 10000000
+  stp_mode: cancel_resting
+  market_order_band: 0.05
+  # Books persist across UWTC day boundaries: the output calendar is continuous 24/7.
+  cancel_on_eod: false
+  day_gap_ms: 0
+  fees:
+    maker_cents_per_unit: 0
+    taker_cents_per_unit: 0
+  market_data:
+    book_depth: 5
+    publish_ms: 1000
+    anonymize_trades: true
+    account_publish_ms: 60000
+  circuit_breaker:
+    enabled: true
+    price_band: 0.10
+  # No exogenous fair value: marks and settlement come from the book.
+  settlement_method: mid
+  close_mark_method: mid
+  bots_risk_exempt: true
+
+instruments:
+  etf_enabled: false
+  letf_enabled: false
+  futures_enabled: false
+  futures_7d_expiries: []
+  futures_14d_underlyings: []
+  futures_14d_expiry: 1
+
+model:
+  market_daily_vol: 0.0
+  market_drift: 0.0
+  commodities: {}
+  jumps:
+    enabled: false
+
+signals:
+  commodity_feed: false
+
+mechanics:
+  auction: {enabled: false}
+  signal_shop: {enabled: false}
+  research: {enabled: false}

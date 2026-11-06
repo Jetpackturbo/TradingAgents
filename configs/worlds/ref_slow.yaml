@@ -1,0 +1,8 @@
+# Slow price discovery: half-life ~34 min, little microstructure noise. Mispricing and momentum both predictive.
+name: ref_slow
+n_symbols: 16
+minutes: 5760
+k: 0.02
+mu: 0.0
+sigma_f: 0.0010
+sigma_n: 0.0005

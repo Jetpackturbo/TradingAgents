@@ -1,0 +1,8 @@
+# Placebo: k = 0, price is a random walk unrelated to fair value. Every factor has zero expected IC.
+name: ref_placebo
+n_symbols: 16
+minutes: 5760
+k: 0.0
+mu: 0.0
+sigma_f: 0.0010
+sigma_n: 0.0010
