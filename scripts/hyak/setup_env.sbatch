@@ -50,7 +50,8 @@ python -m pip install -c "$constraints" -e "third_party/QuantEvolver[backtest,rf
 rm -f "$constraints"
 
 if [ ! -f "$MODEL_DIR/config.json" ]; then
-    huggingface-cli download "$MODEL_ID" --local-dir "$MODEL_DIR"
+    python -c "import sys; from huggingface_hub import snapshot_download; snapshot_download(sys.argv[1], local_dir=sys.argv[2])" \
+        "$MODEL_ID" "$MODEL_DIR"
 fi
 
 activate_env
