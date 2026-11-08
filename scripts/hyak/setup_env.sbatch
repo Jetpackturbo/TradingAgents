@@ -40,7 +40,12 @@ python -m pip install --upgrade pip
 python -m pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cu124
 python -m pip install -c "$constraints" vllm==0.8.5
 python -m pip install -c "$constraints" verl==0.4.1
-python -m pip install -c "$constraints" flash-attn==2.7.4.post1 --no-build-isolation
+# Prebuilt wheel: compute nodes have no nvcc, so building flash-attn from source fails.
+if ! python -c "import flash_attn" 2>/dev/null; then
+    abi="$(python -c 'import torch; print(str(torch._C._GLIBCXX_USE_CXX11_ABI).upper())')"
+    python -m pip install -c "$constraints" \
+        "https://github.com/Dao-AILab/flash-attention/releases/download/v2.7.4.post1/flash_attn-2.7.4.post1+cu12torch2.6cxx11abi${abi}-cp311-cp311-linux_x86_64.whl"
+fi
 python -m pip install -c "$constraints" -e "third_party/QuantEvolver[backtest,rft]" -e .
 rm -f "$constraints"
 
