@@ -99,7 +99,7 @@ def build_verl_config(rft: RFTConfig):
         },
         "ray_init": {"num_cpus": None},
     })
-    cfg = OmegaConf.merge(base, overrides)
+    cfg = OmegaConf.merge(base, overrides, OmegaConf.from_dotlist(list(rft.extra_overrides)))
     OmegaConf.resolve(cfg)
     return cfg
 
@@ -164,7 +164,8 @@ def build_reward_fn(rft: RFTConfig, tokenizer):
     if rft.reward_impl == "ground_truth":
         from quant_evolver.rft.gt_reward import GroundTruthReward, load_evaluator
 
-        return GroundTruthReward(tokenizer, load_evaluator(rft.reward_evaluator, dict(rft.reward_kwargs)))
+        return GroundTruthReward(tokenizer, load_evaluator(rft.reward_evaluator, dict(rft.reward_kwargs)),
+                                 workers=rft.reward_workers)
     if rft.reward_impl != "quant_evolver":
         raise ValueError(f"unknown reward_impl {rft.reward_impl!r}")
     return QuantRewardBridge(

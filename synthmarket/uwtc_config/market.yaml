@@ -11,8 +11,12 @@ market:
   tick_cents: 1
   lot_size: 1
   starting_cash_cents: 10000000
-  stp_mode: cancel_resting
-  market_order_band: 0.05
+  # No trading frictions for bots: UWTC's limits exist to make human trading feel real.
+  # Bots skip all pre-trade risk checks (bots_risk_exempt), the circuit breaker is off,
+  # market orders are not price-capped, and self-trade prevention never cancels a resting
+  # order. Only order shape (tick, lot) is still validated.
+  stp_mode: "off"
+  market_order_band: 1.0
   # Books persist across UWTC day boundaries: the output calendar is continuous 24/7.
   cancel_on_eod: false
   day_gap_ms: 0
@@ -25,8 +29,7 @@ market:
     anonymize_trades: true
     account_publish_ms: 60000
   circuit_breaker:
-    enabled: true
-    price_band: 0.10
+    enabled: false
   # No exogenous fair value: marks and settlement come from the book.
   settlement_method: mid
   close_mark_method: mid

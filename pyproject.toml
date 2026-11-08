@@ -7,10 +7,10 @@ name = "trading-agents"
 version = "0.1.0"
 description = "Synthetic ground-truth markets and evaluators for LLM factor discovery"
 requires-python = ">=3.11"
-dependencies = ["numpy", "pandas", "pyarrow", "pyyaml", "pydantic>=2"]
+dependencies = ["numpy", "pandas", "pyarrow", "pyyaml", "pydantic>=2", "sortedcontainers>=2.4"]
 
 [tool.setuptools.packages.find]
-include = ["synthmarket*", "synth_eval*"]
+include = ["synthmarket*", "synth_eval*", "uwtc*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

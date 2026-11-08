@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT))
 from uwtc.bots.registry import BOT_TYPES  # noqa: E402
 
 from synthmarket import WorldConfig, simulate_world  # noqa: E402
-from synthmarket.bots import FlowMarketMaker, TargetTrader  # noqa: E402
+from synthmarket.bots import FlowMarketMaker, RestingDriftTrader, TargetTrader  # noqa: E402
 from synthmarket.simulate import build_schedules, simulate_symbol  # noqa: E402
 
 WORLDS = ROOT / "configs" / "worlds"
@@ -168,3 +168,39 @@ def test_roster_has_no_exogenous_market_makers():
         assert not cfg.instruments.etf_enabled and not cfg.instruments.letf_enabled
         assert not cfg.instruments.futures_enabled
         assert cfg.market.close_mark_method.value == "mid" and cfg.market.settlement_method.value == "mid"
+
+
+def test_resting_drift_world_never_cancels_and_follows_drift(monkeypatch):
+    from uwtc.exchange.engine import Exchange
+
+    reasons = []
+    orig = Exchange._cancel_order
+
+    def spy(self, order, reason):
+        reasons.append(reason)
+        return orig(self, order, reason)
+
+    monkeypatch.setattr(Exchange, "_cancel_order", spy)
+    w = tiny("uwtc_resting_drift")
+    assert BOT_TYPES["resting_drift_trader"] is RestingDriftTrader
+    assert {b["type"] for b in w.bot_specs()} == {"resting_drift_trader"}
+    up = 50.0 * np.exp(np.arange(w.n_bars) * 2e-4)
+    r = simulate_symbol(w, 1, "S00", 50.0, up, return_engine=True)
+    eng = r["engine"]
+    # The only cancels allowed are UWTC's settlement sweep after the last bar.
+    assert set(reasons) <= {"round_close"}, f"resting orders cancelled during trading: {set(reasons)}"
+    assert r["bot_types"] == ["RestingDriftTrader"]
+    assert r["n_trades"] > 0 and r["invariants_ok"]
+    assert r["schedule_reads"] and all(isinstance(eng.bots.by_account[a], RestingDriftTrader)
+                                       for a in r["schedule_reads"])
+    close = r["bars"]["close"]
+    assert close[-1] / close[0] > np.exp(0.5 * 2e-4 * w.n_bars)
+
+
+def test_resting_placebo_differs_only_in_drift():
+    a = yaml.safe_load((WORLDS / "uwtc_resting_drift.yaml").read_text())
+    b = yaml.safe_load((WORLDS / "uwtc_resting_placebo.yaml").read_text())
+    assert a["schedule"]["mu_std"] > 0 and b["schedule"]["mu_std"] == 0
+    a["schedule"]["mu_std"] = 0
+    a["name"] = b["name"]
+    assert a == b

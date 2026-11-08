@@ -1,0 +1,42 @@
+# PLACEBO for uwtc_resting_drift.yaml: identical except mu_std: 0, so every target is flat and
+# there is no drift to detect.
+name: uwtc_resting_placebo
+seed: 1
+n_symbols: 16
+symbol_prefix: S
+price_min: 20.0
+price_max: 200.0
+days: 5
+bars_per_day: 1440
+bar_ms: 1000
+tick_ms: 100
+calendar_start: "2024-01-01 00:00"
+
+schedule:
+  family: ramp
+  sigma_f: 0.0
+  mu: 0.0
+  mu_std: 0.0
+  sigma_dispersion: 0.0
+
+market_makers: []
+
+resting:
+  count: 4
+  interval_ms: 100
+  arrivals_per_bar: 0.5
+  size_min: 1
+  size_max: 10
+  depth_bps: 20
+  cross_bps: 10
+  lag_steps: 0
+  side: both
+
+informed:
+  count: 0
+
+noise:
+  count: 0
+
+retail:
+  count: 0

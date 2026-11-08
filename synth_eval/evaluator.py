@@ -123,6 +123,8 @@ class SynthEvaluator:
     min_times: int = 20
     block_bars: int | None = None
     n_boot: int = 1000
+    # Max cached (expr, split) factor panels; the cache is dropped when full (long RL runs see many exprs).
+    cache_size: int = 512
 
     def __post_init__(self) -> None:
         self.train = Split.load(self.train_dir, self.bar_minutes)
@@ -140,6 +142,8 @@ class SynthEvaluator:
 
         key = (expr, str(split.path))
         if key not in self._dsl_cache:
+            if len(self._dsl_cache) >= self.cache_size:
+                self._dsl_cache.clear()
             cols = {}
             for sym, b in split.bars.items():
                 try:

@@ -43,6 +43,18 @@ class InformedSpec(_Strict):
     side: Literal["both", "buy", "sell"] = "both"
 
 
+class RestingSpec(_Strict):
+    count: int = 0
+    interval_ms: int = 100
+    arrivals_per_bar: float = 0.5
+    size_min: int = 1
+    size_max: int = 10
+    depth_bps: float = 20.0
+    cross_bps: float = 10.0
+    lag_steps: int = 0
+    side: Literal["both", "buy", "sell"] = "both"
+
+
 class NoiseSpec(_Strict):
     count: int = 4
     interval_ms: int = 100
@@ -79,6 +91,7 @@ class WorldConfig(_Strict):
     schedule: ScheduleSpec = Field(default_factory=ScheduleSpec)
     market_makers: list[MarketMakerSpec] = Field(default_factory=lambda: [MarketMakerSpec()])
     informed: InformedSpec = Field(default_factory=InformedSpec)
+    resting: RestingSpec = Field(default_factory=RestingSpec)
     noise: NoiseSpec = Field(default_factory=NoiseSpec)
     retail: RetailSpec = Field(default_factory=RetailSpec)
     extra_bots: list[dict[str, Any]] = Field(default_factory=list)
@@ -90,7 +103,7 @@ class WorldConfig(_Strict):
             raise ValueError("bar_ms must be a multiple of tick_ms")
         if self.symbols is not None and len(set(self.symbols)) != len(self.symbols):
             raise ValueError("duplicate symbols")
-        for b in (self.informed, self.noise, self.retail):
+        for b in (self.informed, self.resting, self.noise, self.retail):
             if b.count and b.interval_ms % self.tick_ms:
                 raise ValueError("bot interval_ms must be a multiple of tick_ms")
         return self
@@ -146,6 +159,13 @@ class WorldConfig(_Strict):
                 "arrivals_per_bar": i.arrivals_per_bar, "size_min": i.size_min, "size_max": i.size_max,
                 "edge_bps": i.edge_bps, "lag_steps": i.lag_steps,
                 "target_noise_bps": i.target_noise_bps, "side": i.side}})
+        rs = self.resting
+        if rs.count > 0:
+            bots.append({"name": "resting", "type": "resting_drift_trader", "count": rs.count, "params": {
+                "symbols": "equities", "interval_ms": rs.interval_ms,
+                "arrivals_per_bar": rs.arrivals_per_bar, "size_min": rs.size_min, "size_max": rs.size_max,
+                "depth_bps": rs.depth_bps, "cross_bps": rs.cross_bps, "lag_steps": rs.lag_steps,
+                "side": rs.side}})
         bots.extend(dict(b) for b in self.extra_bots)
         return bots
 

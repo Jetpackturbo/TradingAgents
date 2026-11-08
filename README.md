@@ -19,7 +19,7 @@ Synthetic markets with known ground truth for evaluating LLM "fair price" factor
 
 ```powershell
 py -3.12 -m venv .venv
-.\.venv\Scripts\pip install -e "third_party/QuantEvolver[backtest,dev,rft]" -e . -e "<path-to>/UWTC_Backend[dev]"
+.\.venv\Scripts\pip install -e "third_party/QuantEvolver[backtest,dev,rft]" -e .
 ```
 
 ## Reproduce

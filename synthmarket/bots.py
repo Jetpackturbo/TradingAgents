@@ -3,6 +3,8 @@
 * ``flow_market_maker`` (:class:`FlowMarketMaker`): learns its reference price only from
   the public trade tape (price, qty, aggressor side) and its own inventory.
 * ``target_trader`` (:class:`TargetTrader`): informed trader that sees the target schedule.
+* ``resting_drift_trader`` (:class:`RestingDriftTrader`): posts never-cancelled resting limits
+  around the target schedule; on its own it forms the simplest drift world.
 """
 
 from __future__ import annotations
@@ -164,5 +166,45 @@ class TargetTrader(Bot):
                 ctx.submit(sym, Side.SELL, qty, int(math.ceil(f * (1 + e) / t)) * t, "ioc")
 
 
+class RestingDriftTrader(TargetTrader):
+    """Simplest price former: posts resting limit orders around its internal target and never cancels.
+
+    Arrives with probability ``arrivals_per_bar * interval_ms / bar_ms`` per tick and per symbol,
+    picks a side, and posts a limit at ``F * (1 + u)`` (buy) or ``F * (1 - u)`` (sell) with
+    ``u ~ U(-depth_bps, cross_bps) / 1e4``: most orders rest behind F, some reach through it and
+    trade against older resting orders. With a drifting F this is the whole price process.
+    """
+
+    default_params = {
+        "symbols": "equities",
+        "interval_ms": 100,
+        "arrivals_per_bar": 0.5,
+        "size_min": 1,
+        "size_max": 10,
+        "depth_bps": 20.0,
+        "cross_bps": 10.0,
+        "lag_steps": 0,
+        "side": "both",
+    }
+
+    def on_tick(self, ctx: BotContext) -> None:
+        p = self.p
+        rng = ctx.rng
+        eng = ctx.engine
+        t = ctx.tick
+        for sym in self.symbols:
+            if not ctx.tradable(sym) or rng.random() >= self.prob:
+                continue
+            f = self.view.value(sym, eng.current_bar() - p["lag_steps"]) * 100.0
+            u = rng.uniform(-p["depth_bps"], p["cross_bps"]) / 1e4
+            buy = p["side"] == "buy" or (p["side"] == "both" and rng.random() < 0.5)
+            qty = rng.randint(p["size_min"], p["size_max"])
+            if buy:
+                ctx.submit(sym, Side.BUY, qty, max(t, int(math.floor(f * (1 + u) / t)) * t), "limit")
+            else:
+                ctx.submit(sym, Side.SELL, qty, max(t, int(math.ceil(f * (1 - u) / t)) * t), "limit")
+
+
 BOT_TYPES.setdefault("flow_market_maker", FlowMarketMaker)
 BOT_TYPES.setdefault("target_trader", TargetTrader)
+BOT_TYPES.setdefault("resting_drift_trader", RestingDriftTrader)

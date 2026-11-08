@@ -1,5 +1,15 @@
 # third_party patches
 
+## uwtc (top-level `uwtc/` package in this repo)
+
+- Source: the local UWTC exchange backend (`UWTC_Backend`, MIT, license in `uwtc/LICENSE`) at commit
+  `51b0d398684dbf68006e46d79ec2faf5b87598b0`, copied 2026-11-08. Only the 29 modules `synthmarket` imports are
+  included (exchange, round engine, bots, config, and the market/mechanics/sdk modules the round engine imports);
+  the server, CLI, hosting, analysis and simulator code is left out. Its `config/` directory is not needed:
+  `synthmarket` passes its own `synthmarket/uwtc_config/` to `load_round_config`.
+- Source changes: **none** (files are byte-identical to the source). It ships as part of this repo's package
+  (`pip install -e .`); its one extra dependency, `sortedcontainers`, is in the root `pyproject.toml`.
+
 ## QuantEvolver
 
 - Source: https://github.com/QuantLLM/QuantEvolver at commit `4eb0e78842138ada5334349585b114ad923564e8`
@@ -60,3 +70,13 @@ Verified: `scripts/sanity.py` (end-to-end section) loads `configs/rft_ground_tru
 reward via `build_reward_fn`, and scores a fake verl batch; the last-token reward equals the evaluator proxy
 exactly. `quantevolver rft-launch configs/rft_ground_truth_ref_slow.yaml --dry-run` writes the launch script and a
 resolved config that keeps `reward_impl: ground_truth` and the evaluator kwargs.
+
+### Additions for the Hyak GPU runs
+
+- `GroundTruthReward(workers=...)` (passed `rft.reward_workers`): distinct `(expr, start, end)` keys in a batch are
+  scored once, in a forked process pool (Linux; falls back to serial elsewhere), and memoised across steps.
+- `RFTConfig.extra_overrides` (already declared, previously unused) is now applied: `build_verl_config` merges it as
+  an OmegaConf dotlist after the built-in overrides, e.g. `["ray_init.num_cpus=16"]` so Ray respects the Slurm
+  CPU allocation.
+
+Not yet run on GPUs from this machine: verify on the first Hyak job (`scripts/hyak/`).
