@@ -35,8 +35,10 @@ set -u
 
 export PIP_CACHE_DIR="$HYAK_ROOT/pip_cache"
 constraints="$(mktemp)"
-printf 'torch==2.6.0\nvllm==0.8.5\nverl==0.4.1\n' > "$constraints"
+# setuptools>=81 dropped pkg_resources, which parts of this stack still import.
+printf 'torch==2.6.0\nvllm==0.8.5\nverl==0.4.1\nsetuptools<81\n' > "$constraints"
 python -m pip install --upgrade pip
+python -m pip install "setuptools<81"
 python -m pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cu124
 python -m pip install -c "$constraints" vllm==0.8.5
 python -m pip install -c "$constraints" verl==0.4.1
