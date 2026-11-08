@@ -2,7 +2,7 @@
 # Override any of these by exporting it before calling sbatch / the submit script.
 
 : "${HYAK_ROOT:=/gscratch/socialrl/$USER}"                  # big, fast storage (home quota is small)
-: "${REPO_DIR:=$HYAK_ROOT/TradingAgents}"                    # this repository
+: "${REPO_DIR:=$(pwd)}"                                      # this repository (callers cd here first)
 : "${CONDA_DIR:=$HYAK_ROOT/miniforge3}"
 : "${ENV_PREFIX:=$HYAK_ROOT/envs/trading-agents-rft}"
 : "${MODEL_ID:=Qwen/Qwen3-1.7B}"

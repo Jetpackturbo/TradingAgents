@@ -36,12 +36,14 @@ set -u
 export PIP_CACHE_DIR="$HYAK_ROOT/pip_cache"
 constraints="$(mktemp)"
 # setuptools>=81 dropped pkg_resources, which parts of this stack still import.
-printf 'torch==2.6.0\nvllm==0.8.5\nverl==0.4.1\nsetuptools<81\n' > "$constraints"
+# vllm 0.8.5 / verl 0.4.1 do not cap transformers, but they predate transformers 5.x.
+printf 'torch==2.6.0\nvllm==0.8.5\nverl==0.4.1\nsetuptools<81\ntransformers==4.51.3\n' > "$constraints"
 python -m pip install --upgrade pip
 python -m pip install "setuptools<81"
 python -m pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cu124
 python -m pip install -c "$constraints" vllm==0.8.5
 python -m pip install -c "$constraints" verl==0.4.1
+python -m pip install -c "$constraints" transformers==4.51.3 pytest
 # Prebuilt wheel: compute nodes have no nvcc, so building flash-attn from source fails.
 if ! python -c "import flash_attn" 2>/dev/null; then
     abi="$(python -c 'import torch; print(str(torch._C._GLIBCXX_USE_CXX11_ABI).upper())')"
